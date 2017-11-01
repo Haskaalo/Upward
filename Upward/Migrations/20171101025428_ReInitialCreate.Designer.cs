@@ -10,9 +10,9 @@ using Upward.Models.Database;
 
 namespace Upward.Migrations
 {
-    [DbContext(typeof(UpwardContext))]
-    [Migration("20171101022123_InitialCreate")]
-    partial class InitialCreate
+    [DbContext(typeof(upwardContext))]
+    [Migration("20171101025428_ReInitialCreate")]
+    partial class ReInitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -94,6 +94,9 @@ namespace Upward.Migrations
                         .IsRequired()
                         .HasColumnName("name")
                         .HasMaxLength(39);
+
+                    b.Property<bool>("Private")
+                        .HasColumnName("private");
 
                     b.Property<int>("Userid")
                         .HasColumnName("userid");

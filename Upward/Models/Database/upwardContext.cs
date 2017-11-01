@@ -2,19 +2,21 @@
 
 namespace Upward.Models.Database
 {
-    public partial class UpwardContext : DbContext
+    public partial class upwardContext : DbContext
     {
         public virtual DbSet<Pkgapikey> Pkgapikey { get; set; }
         public virtual DbSet<Pkgfile> Pkgfile { get; set; }
         public virtual DbSet<Project> Project { get; set; }
         public virtual DbSet<Userprofile> Userprofile { get; set; }
 
+        public upwardContext(DbContextOptions<upwardContext> options) : base(options)
+        {
+
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseNpgsql(@"Host=localhost;Database=upward;Username=upward;Password=totalrandomlol;Pooling=true");
-            }
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -90,6 +92,10 @@ namespace Upward.Models.Database
 
                 entity.Property(e => e.Userid)
                 .HasColumnName("userid");
+
+                entity.Property(e => e.Private)
+                    .IsRequired()
+                    .HasColumnName("private");
             });
 
             modelBuilder.Entity<Userprofile>(entity =>

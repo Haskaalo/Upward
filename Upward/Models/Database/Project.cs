@@ -9,5 +9,6 @@ namespace Upward.Models.Database
         public string Name { get; set; }
         public int Userid { get; set; }
         public DateTime Created { get; set; }
+        public bool Private { get; set; }
     }
 }

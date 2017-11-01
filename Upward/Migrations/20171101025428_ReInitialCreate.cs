@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Upward.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class ReInitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -48,6 +48,7 @@ namespace Upward.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     created = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "now()"),
                     name = table.Column<string>(type: "varchar(39)", maxLength: 39, nullable: false),
+                    @private = table.Column<bool>(name: "private", type: "bool", nullable: false),
                     userid = table.Column<int>(type: "int4", nullable: false)
                 },
                 constraints: table =>

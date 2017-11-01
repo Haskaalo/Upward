@@ -19,7 +19,7 @@ namespace Upward
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<UpwardContext>(options =>
+            services.AddDbContext<upwardContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("PGDatabase"))
             );
 
@@ -35,7 +35,7 @@ namespace Upward
 
             app.UseMvc();
 
-            var db = serviceProvider.GetService<UpwardContext>();
+            var db = serviceProvider.GetService<upwardContext>();
             db.Database.Migrate();
         }
     }
