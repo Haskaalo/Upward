@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Upward.Models.Database;
+using Microsoft.EntityFrameworkCore;
 
 namespace Upward
 {
@@ -16,10 +19,14 @@ namespace Upward
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<UpwardContext>(options =>
+            options.UseNpgsql(Configuration.GetConnectionString("PGDatabase"))
+            );
+
             services.AddMvc();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -27,6 +34,9 @@ namespace Upward
             }
 
             app.UseMvc();
+
+            var db = serviceProvider.GetService<UpwardContext>();
+            db.Database.Migrate();
         }
     }
 }
