@@ -15,6 +15,7 @@ namespace Upward.Migrations
                 {
                     key = table.Column<Guid>(type: "uuid", nullable: false),
                     created = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "now()"),
+                    name = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true),
                     project = table.Column<int>(type: "int4", nullable: false)
                 },
                 constraints: table =>

@@ -11,9 +11,10 @@ using Upward.Models.Database;
 namespace Upward.Migrations
 {
     [DbContext(typeof(upwardContext))]
-    partial class upwardContextModelSnapshot : ModelSnapshot
+    [Migration("20171103015151_RemoveUsername")]
+    partial class RemoveUsername
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

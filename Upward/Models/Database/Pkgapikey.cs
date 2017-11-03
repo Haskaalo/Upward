@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Upward.Models.Database
 {
@@ -7,6 +6,7 @@ namespace Upward.Models.Database
     {
         public Guid Key { get; set; }
         public int Project { get; set; }
+        public string Name { get; set; }
         public DateTime Created { get; set; }
     }
 }

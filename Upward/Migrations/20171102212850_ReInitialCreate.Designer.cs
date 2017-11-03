@@ -11,7 +11,7 @@ using Upward.Models.Database;
 namespace Upward.Migrations
 {
     [DbContext(typeof(upwardContext))]
-    [Migration("20171101025428_ReInitialCreate")]
+    [Migration("20171102212850_ReInitialCreate")]
     partial class ReInitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,6 +32,10 @@ namespace Upward.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("created")
                         .HasDefaultValueSql("now()");
+
+                    b.Property<string>("Name")
+                        .HasColumnName("name")
+                        .HasMaxLength(255);
 
                     b.Property<int>("Project")
                         .HasColumnName("project");

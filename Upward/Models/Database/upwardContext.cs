@@ -40,6 +40,10 @@ namespace Upward.Models.Database
                 entity.Property(e => e.Project)
                     .IsRequired()
                     .HasColumnName("project");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(255)
+                    .HasColumnName("name");
             });
 
             modelBuilder.Entity<Pkgfile>(entity =>
@@ -117,11 +121,6 @@ namespace Upward.Models.Database
                     .IsRequired()
                     .HasMaxLength(60)
                     .HasColumnName("password");
-
-                entity.Property(e => e.Username)
-                    .IsRequired()
-                    .HasMaxLength(39)
-                    .HasColumnName("username");
             });
         }
     }
