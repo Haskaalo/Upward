@@ -72,10 +72,17 @@ namespace Upward.Models.Database
                     .HasColumnName("sha256")
                     .HasColumnType("varchar(64)[]");
 
-                entity.Property(e => e.Version)
+                entity.Property(e => e.Major)
                     .IsRequired()
-                    .HasMaxLength(255)
-                    .HasColumnName("version");
+                    .HasColumnName("major");
+
+                entity.Property(e => e.Minor)
+                    .IsRequired()
+                    .HasColumnName("minor");
+
+                entity.Property(e => e.Patch)
+                    .IsRequired()
+                    .HasColumnName("patch");
             });
 
             modelBuilder.Entity<Project>(entity =>
@@ -107,6 +114,9 @@ namespace Upward.Models.Database
                 entity.ToTable("userprofile");
 
                 entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.GithubId)
+                    .HasColumnName("githubid");
 
                 entity.Property(e => e.Created)
                     .HasColumnName("created")

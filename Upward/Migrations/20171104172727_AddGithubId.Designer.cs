@@ -11,9 +11,10 @@ using Upward.Models.Database;
 namespace Upward.Migrations
 {
     [DbContext(typeof(upwardContext))]
-    partial class upwardContextModelSnapshot : ModelSnapshot
+    [Migration("20171104172727_AddGithubId")]
+    partial class AddGithubId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,15 +65,6 @@ namespace Upward.Migrations
                         .HasColumnName("label")
                         .HasMaxLength(39);
 
-                    b.Property<int>("Major")
-                        .HasColumnName("major");
-
-                    b.Property<int>("Minor")
-                        .HasColumnName("minor");
-
-                    b.Property<int>("Patch")
-                        .HasColumnName("patch");
-
                     b.Property<int>("Project")
                         .HasColumnName("project");
 
@@ -80,6 +72,11 @@ namespace Upward.Migrations
                         .IsRequired()
                         .HasColumnName("sha256")
                         .HasColumnType("varchar(64)[]");
+
+                    b.Property<string>("Version")
+                        .IsRequired()
+                        .HasColumnName("version")
+                        .HasMaxLength(255);
 
                     b.HasKey("Id");
 

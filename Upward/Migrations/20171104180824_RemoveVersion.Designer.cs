@@ -11,9 +11,10 @@ using Upward.Models.Database;
 namespace Upward.Migrations
 {
     [DbContext(typeof(upwardContext))]
-    partial class upwardContextModelSnapshot : ModelSnapshot
+    [Migration("20171104180824_RemoveVersion")]
+    partial class RemoveVersion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

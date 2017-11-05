@@ -6,7 +6,9 @@ namespace Upward.Models.Database
     public partial class Pkgfile
     {
         public int Id { get; set; }
-        public string Version { get; set; }
+        public int Major { get; set; }
+        public int Minor { get; set; }
+        public int Patch { get; set; }
         public string Label { get; set; }
         public string[] Sha256 { get; set; }
         public string[] Filename { get; set; }

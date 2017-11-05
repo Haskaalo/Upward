@@ -60,7 +60,7 @@ namespace Upward.ActionFilters
             }
 
             var doesKeyExist = db.Pkgapikey.Any(x => x.Project == project.Id && x.Key == actualKey);
-            Console.WriteLine($"{project.Id} and {key}");
+
             if (!doesKeyExist)
             {
                 notAuthorized.code = "KeyNotExist";
