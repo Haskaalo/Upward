@@ -6,6 +6,7 @@ using Upward.Models;
 using Upward.Models.Database;
 using Microsoft.AspNetCore.Http;
 using Upward.Helpers;
+using System;
 
 namespace Upward.Controllers
 {
@@ -17,6 +18,7 @@ namespace Upward.Controllers
         {
             db = context;
         }
+
         // GET: /create
         [HttpPost("/create"), ValidApiKey(MustCheck = true), CreateHasRequiredHeader]
         public async Task<IActionResult> Create([FromBody] CreateModel create)
@@ -34,7 +36,35 @@ namespace Upward.Controllers
                 HttpContext.Response.StatusCode = 400;
                 return Json(apiError);
             }
-            return Ok("test");
+
+            var ver = create.Version.Split(".");
+            var currentDate = DateTime.Now;
+
+            var newPackage = new Pkgfile
+            {
+                Project = project.Id,
+                Major = int.Parse(ver[0]),
+                Minor = int.Parse(ver[1]),
+                Patch = int.Parse(ver[2]),
+                Label = create.Tag,
+                Sha256 = new string[] { },
+                Filename = new string[] { },
+                Created = currentDate
+            };
+
+            await db.Pkgfile.AddAsync(newPackage);
+            await db.SaveChangesAsync();
+
+            var SuccessResponse = new CreateSuccessModel
+            {
+                Url = $"{HttpContext.Request.Host.ToString()}/{create.Version}/",
+                UrlWithTag = create.Tag == null ? null : $"{HttpContext.Request.Host.ToString()}/{create.Tag}/{create.Version}",
+                Created = currentDate.ToString(),
+                Tag = create.Tag,
+                Version = create.Version
+            };
+
+            return Json(SuccessResponse);
         }
     }
 }
