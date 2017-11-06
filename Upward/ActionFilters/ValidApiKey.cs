@@ -25,6 +25,7 @@ namespace Upward.ActionFilters
             {
                 notAuthorized.code = "NoSuchProject";
                 notAuthorized.message = "No such project exist";
+                context.HttpContext.Response.StatusCode = 404;
                 context.Result = new JsonResult(notAuthorized);
                 return;
             }

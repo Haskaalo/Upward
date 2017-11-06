@@ -5,31 +5,38 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Upward.ActionFilters;
 using Upward.Models;
+using Upward.Models.Database;
 using Microsoft.AspNetCore.Http;
+using Upward.Helpers;
 
 namespace Upward.Controllers
 {
     public class ProjectSettingsController : Controller
     {
-        // GET: /create
-        [HttpPost("/create"), ValidApiKey(MustCheck = true)]
-        public IActionResult Create(ICollection<IFormFile> files)
+        private readonly upwardContext db;
+
+        public ProjectSettingsController(upwardContext context)
         {
-            var ErrorMessage = new ApiErrorModel();
-            if (files.Count() == 0)
+            db = context;
+        }
+        // GET: /create
+        [HttpPost("/create"), ValidApiKey(MustCheck = true), CreateHasRequiredHeader]
+        public async Task<IActionResult> Create(ICollection<IFormFile> files)
+        {
+            var projectName = HttpContext.Request.Host.ToString().Split(".")[0];
+            var project = db.Project.Where(r => r.Name == projectName).FirstOrDefault();
+
+            var hasNoRollback = await new ValidVersion(db).NoRollback(HttpContext.Request.Headers["x-upward-version"], project.Id);
+            var apiError = new ApiErrorModel();
+            if (!hasNoRollback)
             {
-                ErrorMessage.code = "NoFileAttached";
-                ErrorMessage.message = "No file(s) was attached to the request.";
+                apiError.code = "VersionHasRollback";
+                apiError.message = "The version specified in the header has a rollback";
 
                 HttpContext.Response.StatusCode = 400;
-                return Json(ErrorMessage);
+                return Json(apiError);
             }
-
-            ErrorMessage.code = "ErrorHappened";
-            ErrorMessage.message = "An error happened while creating object.";
-
-            HttpContext.Response.StatusCode = 500;
-            return Json(ErrorMessage);
+            return Ok("test");
         }
     }
 }
