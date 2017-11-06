@@ -9,33 +9,32 @@ namespace Upward.ActionFilters
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            string version = context.HttpContext.Request.Headers["x-upward-version"];
-            string tag = context.HttpContext.Request.Headers["x-upward-tag"];
+            CreateModel create = (CreateModel)context.ActionArguments["create"];
 
             var notValid = new ApiErrorModel();
 
-            if (string.IsNullOrWhiteSpace(version))
+            if (string.IsNullOrWhiteSpace(create.Version))
             {
                 notValid.code = "NoVersion";
-                notValid.message = "There is no X-Upward-Version in the headers";
+                notValid.message = "There is no version in the body";
                 context.HttpContext.Response.StatusCode = 400;
                 context.Result = new JsonResult(notValid);
                 return;
             }
 
-            if (!ValidVersion.ValidSemver(version))
+            if (!ValidVersion.ValidSemver(create.Version))
             {
                 notValid.code = "NotValidVersion";
-                notValid.message = "The version in X-Upward-Version is not valid";
+                notValid.message = "The version in the body is not valid";
                 context.HttpContext.Response.StatusCode = 400;
                 context.Result = new JsonResult(notValid);
                 return;
             }
 
-            if (tag != null && string.IsNullOrWhiteSpace(tag))
+            if (create.Tag != null && string.IsNullOrWhiteSpace(create.Tag))
             {
                 notValid.code = "EmptyTag";
-                notValid.message = "The X-Upward-Tag is empty or consist of whitespace(s)";
+                notValid.message = "The tag is empty or consist of whitespace(s)";
                 context.HttpContext.Response.StatusCode = 400;
                 context.Result = new JsonResult(notValid);
                 return;

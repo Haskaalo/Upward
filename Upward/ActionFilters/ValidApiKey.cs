@@ -15,7 +15,7 @@ namespace Upward.ActionFilters
         {
             var db = (upwardContext)context.HttpContext.RequestServices.GetService(typeof(upwardContext));
 
-            var key = context.HttpContext.Request.Headers["x-upward-key"];
+            string key = context.HttpContext.Request.Headers["Authorization"];
             var projectName = context.HttpContext.Request.Host.ToString().Split(".")[0];
             var notAuthorized = new ApiErrorModel();
 
@@ -38,24 +38,33 @@ namespace Upward.ActionFilters
                 if (projectExist) return;
             }
 
-            if (string.IsNullOrWhiteSpace(key))
+            if (string.IsNullOrEmpty(key))
             {
                 notAuthorized.code = "MissingKey";
                 notAuthorized.message = "Api key is missing from headers";
-                context.HttpContext.Response.StatusCode = 403;
+                context.HttpContext.Response.StatusCode = 401;
+                context.Result = new JsonResult(notAuthorized);
+                return;
+            }
+            
+            if (!key.StartsWith("Bearer "))
+            {
+                notAuthorized.code = "NotValidAuthorizationType";
+                notAuthorized.message = "The Authorization type in the header isn't Bearer";
+                context.HttpContext.Response.StatusCode = 401;
                 context.Result = new JsonResult(notAuthorized);
                 return;
             }
 
             Guid actualKey;
-            var isUUID = Guid.TryParse(key, out actualKey);
+            var isUUID = Guid.TryParse(key.Substring("Bearer ".Length).Trim(), out actualKey);
 
             if (!isUUID)
             {
                 notAuthorized.code = "NotValidKey";
                 notAuthorized.message = "Api key provided isn't valid.";
 
-                context.HttpContext.Response.StatusCode = 403;
+                context.HttpContext.Response.StatusCode = 401;
                 context.Result = new JsonResult(notAuthorized);
                 return;
             }
@@ -67,7 +76,7 @@ namespace Upward.ActionFilters
                 notAuthorized.code = "KeyNotExist";
                 notAuthorized.message = "This key doesn't exists";
 
-                context.HttpContext.Response.StatusCode = 403;
+                context.HttpContext.Response.StatusCode = 401;
                 context.Result = new JsonResult(notAuthorized);
                 return;
             }

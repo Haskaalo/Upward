@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Upward.Models.Database;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace Upward.Helpers
 {

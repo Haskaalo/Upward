@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Upward.ActionFilters;
@@ -21,12 +19,12 @@ namespace Upward.Controllers
         }
         // GET: /create
         [HttpPost("/create"), ValidApiKey(MustCheck = true), CreateHasRequiredHeader]
-        public async Task<IActionResult> Create(ICollection<IFormFile> files)
+        public async Task<IActionResult> Create([FromBody] CreateModel create)
         {
             var projectName = HttpContext.Request.Host.ToString().Split(".")[0];
             var project = db.Project.Where(r => r.Name == projectName).FirstOrDefault();
 
-            var hasNoRollback = await new ValidVersion(db).NoRollback(HttpContext.Request.Headers["x-upward-version"], project.Id);
+            var hasNoRollback = await new ValidVersion(db).NoRollback(create.Version, project.Id);
             var apiError = new ApiErrorModel();
             if (!hasNoRollback)
             {
