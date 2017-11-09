@@ -76,10 +76,8 @@ namespace Upward.Migrations
                     b.Property<int>("Project")
                         .HasColumnName("project");
 
-                    b.Property<string[]>("Sha256")
-                        .IsRequired()
-                        .HasColumnName("sha256")
-                        .HasColumnType("varchar(64)[]");
+                    b.Property<long>("Size")
+                        .HasColumnName("size");
 
                     b.HasKey("Id");
 

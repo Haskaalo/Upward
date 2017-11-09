@@ -65,12 +65,10 @@ namespace Upward.Models.Database
                     .HasMaxLength(39)
                     .HasColumnName("label");
 
-                entity.Property(e => e.Project).HasColumnName("project");
+                entity.Property(e => e.Size)
+                    .HasColumnName("size");
 
-                entity.Property(e => e.Sha256)
-                    .IsRequired()
-                    .HasColumnName("sha256")
-                    .HasColumnType("varchar(64)[]");
+                entity.Property(e => e.Project).HasColumnName("project");
 
                 entity.Property(e => e.Major)
                     .IsRequired()

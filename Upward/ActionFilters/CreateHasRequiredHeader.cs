@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Upward.Models;
 using Upward.Helpers;
+using System.Net.Mime;
 
 namespace Upward.ActionFilters
 {
@@ -35,6 +36,15 @@ namespace Upward.ActionFilters
             {
                 notValid.code = "EmptyTag";
                 notValid.message = "The tag is empty or consist of whitespace(s)";
+                context.HttpContext.Response.StatusCode = 400;
+                context.Result = new JsonResult(notValid);
+                return;
+            }
+
+            if ((string)context.HttpContext.Request.Headers["content-type"] == null)
+            {
+                notValid.code = "NoContentType";
+                notValid.message = "Missing Content-Type in header";
                 context.HttpContext.Response.StatusCode = 400;
                 context.Result = new JsonResult(notValid);
                 return;

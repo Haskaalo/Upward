@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Upward.Models.Database;
 using Microsoft.EntityFrameworkCore;
+using Google.Cloud.Storage.V1;
 
 namespace Upward
 {
@@ -22,7 +23,7 @@ namespace Upward
             services.AddDbContext<upwardContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("PGDatabase"))
             );
-
+            services.AddSingleton(StorageClient.Create());
             services.AddMvc();
         }
 

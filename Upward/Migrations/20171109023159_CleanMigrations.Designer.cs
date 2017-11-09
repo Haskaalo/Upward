@@ -11,8 +11,8 @@ using Upward.Models.Database;
 namespace Upward.Migrations
 {
     [DbContext(typeof(upwardContext))]
-    [Migration("20171102212850_ReInitialCreate")]
-    partial class ReInitialCreate
+    [Migration("20171109023159_CleanMigrations")]
+    partial class CleanMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -65,18 +65,20 @@ namespace Upward.Migrations
                         .HasColumnName("label")
                         .HasMaxLength(39);
 
+                    b.Property<int>("Major")
+                        .HasColumnName("major");
+
+                    b.Property<int>("Minor")
+                        .HasColumnName("minor");
+
+                    b.Property<int>("Patch")
+                        .HasColumnName("patch");
+
                     b.Property<int>("Project")
                         .HasColumnName("project");
 
-                    b.Property<string[]>("Sha256")
-                        .IsRequired()
-                        .HasColumnName("sha256")
-                        .HasColumnType("varchar(64)[]");
-
-                    b.Property<string>("Version")
-                        .IsRequired()
-                        .HasColumnName("version")
-                        .HasMaxLength(255);
+                    b.Property<long>("Size")
+                        .HasColumnName("size");
 
                     b.HasKey("Id");
 
@@ -126,15 +128,13 @@ namespace Upward.Migrations
                         .HasColumnName("email")
                         .HasMaxLength(320);
 
+                    b.Property<int>("GithubId")
+                        .HasColumnName("githubid");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnName("password")
                         .HasMaxLength(60);
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnName("username")
-                        .HasMaxLength(39);
 
                     b.HasKey("Id");
 

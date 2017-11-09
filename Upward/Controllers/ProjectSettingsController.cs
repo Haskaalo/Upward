@@ -47,7 +47,6 @@ namespace Upward.Controllers
                 Minor = int.Parse(ver[1]),
                 Patch = int.Parse(ver[2]),
                 Label = create.Tag,
-                Sha256 = new string[] { },
                 Filename = new string[] { },
                 Created = currentDate
             };

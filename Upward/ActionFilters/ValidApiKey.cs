@@ -30,6 +30,8 @@ namespace Upward.ActionFilters
                 return;
             }
 
+            context.HttpContext.Response.Headers["X-Project-Id"] = project.Id.ToString();
+
             if (MustCheck == false)
             {
                 var projectExist = db.Project

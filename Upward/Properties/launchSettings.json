@@ -19,6 +19,7 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "D:\\Code\\Hask\\Upward\\Upward\\.config\\gcloud\\upward-storage-test.json",
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "http://localhost:56534/"
