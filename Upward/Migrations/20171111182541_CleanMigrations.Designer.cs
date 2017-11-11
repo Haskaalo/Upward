@@ -11,7 +11,7 @@ using Upward.Models.Database;
 namespace Upward.Migrations
 {
     [DbContext(typeof(upwardContext))]
-    [Migration("20171109023159_CleanMigrations")]
+    [Migration("20171111182541_CleanMigrations")]
     partial class CleanMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -135,6 +135,11 @@ namespace Upward.Migrations
                         .IsRequired()
                         .HasColumnName("password")
                         .HasMaxLength(60);
+
+                    b.Property<long>("Size")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("size")
+                        .HasDefaultValueSql("0");
 
                     b.HasKey("Id");
 

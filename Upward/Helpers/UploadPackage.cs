@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Google.Cloud.Storage.V1;
 using System.IO;
@@ -31,8 +29,17 @@ namespace Upward.Helpers
                 .Where(r => r.Project == projectId && r.Major == major && r.Minor == minor && r.Patch == patch)
                 .FirstOrDefaultAsync();
 
+            var project = await db.Project
+                .Where(r => r.Id == projectId)
+                .FirstOrDefaultAsync();
+
+            var user = await db.Userprofile
+                .Where(r => r.GithubId == project.Userid)
+                .FirstOrDefaultAsync();
+
             pkg.Filename = pkg.Filename.Concat(new string[] { filename }).ToArray();
             pkg.Size += contentLength;
+            user.Size += contentLength;
 
             await client.UploadObjectAsync(
                 bucket: "upward-test",

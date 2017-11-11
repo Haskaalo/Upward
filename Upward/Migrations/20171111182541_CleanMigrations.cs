@@ -68,7 +68,8 @@ namespace Upward.Migrations
                     created = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "now()"),
                     email = table.Column<string>(type: "varchar(320)", maxLength: 320, nullable: false),
                     githubid = table.Column<int>(type: "int4", nullable: false),
-                    password = table.Column<string>(type: "varchar(60)", maxLength: 60, nullable: false)
+                    password = table.Column<string>(type: "varchar(60)", maxLength: 60, nullable: false),
+                    size = table.Column<long>(type: "int8", nullable: false, defaultValueSql: "0")
                 },
                 constraints: table =>
                 {

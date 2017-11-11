@@ -135,6 +135,11 @@ namespace Upward.Migrations
                         .HasColumnName("password")
                         .HasMaxLength(60);
 
+                    b.Property<long>("Size")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("size")
+                        .HasDefaultValueSql("0");
+
                     b.HasKey("Id");
 
                     b.ToTable("userprofile");

@@ -116,6 +116,10 @@ namespace Upward.Models.Database
                 entity.Property(e => e.GithubId)
                     .HasColumnName("githubid");
 
+                entity.Property(e => e.Size)
+                    .HasColumnName("size")
+                    .HasDefaultValueSql("0");
+
                 entity.Property(e => e.Created)
                     .HasColumnName("created")
                     .HasDefaultValueSql("now()");

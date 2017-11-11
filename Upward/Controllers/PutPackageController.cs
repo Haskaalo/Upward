@@ -5,6 +5,8 @@ using Upward.ActionFilters;
 using System.IO;
 using Upward.Helpers;
 using Upward.Models.Database;
+using Upward.Models;
+using System;
 
 namespace Upward.Controllers
 {
@@ -35,7 +37,17 @@ namespace Upward.Controllers
                 client: _storageClient,
                 db: db
                 );
-            return Ok();
+
+            var SuccessResponse = new CreateSuccessModel
+            {
+                Url = $"{HttpContext.Request.Host.ToString()}/{version}/{filename}",
+                UrlWithTag = tag == null ? null : $"{HttpContext.Request.Host.ToString()}/{tag}/{version}/{filename}",
+                Created = DateTime.Now.ToString(),
+                Tag = tag,
+                Version = version
+            };
+
+            return Json(SuccessResponse);
         }
 
         // PUT: /:version/:filename
@@ -55,7 +67,15 @@ namespace Upward.Controllers
                 client: _storageClient,
                 db: db
                 );
-            return Ok();
+
+            var SuccessResponse = new CreateSuccessModel
+            {
+                Url = $"{HttpContext.Request.Host.ToString()}/{version}/{filename}",
+                Created = DateTime.Now.ToString(),
+                Version = version
+            };
+
+            return Json(SuccessResponse);
         }
     }
 }
