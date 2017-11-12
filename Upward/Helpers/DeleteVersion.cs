@@ -41,11 +41,9 @@ namespace Upward.Helpers
                 return;
             } else
             {
-                foreach (string name in pkg.Filename)
-                {
-                    await client.DeleteObjectAsync("upward-test", $"pkg/{projectId}/{version}/{name}");
-                    await db.SaveChangesAsync();
-                }
+                foreach (string name in pkg.Filename) await client.DeleteObjectAsync("upward-test", $"pkg/{projectId}/{version}/{name}");
+
+                await db.SaveChangesAsync();
             }
         }
     }
