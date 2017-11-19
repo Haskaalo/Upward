@@ -11,12 +11,13 @@ namespace Upward.ActionFilters
 {
     public class PutPackageValidate : ActionFilterAttribute
     {
-        public bool HasTag { get; set; }
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             string version = (string)context.ActionArguments["version"];
             string filename = (string)context.ActionArguments["filename"];
+            string branch = (string)context.ActionArguments["branch"];
+
             var notValid = new ApiErrorModel();
 
             if (filename == null)
@@ -56,17 +57,9 @@ namespace Upward.ActionFilters
             int patch = int.Parse(ver[2]);
 
             var pkg = db.Pkgfile
-                .Where(r => r.Project.ToString() == Id.ToString() && r.Major == major && r.Minor == minor && r.Patch == patch)
+                .Where(r => r.Project.ToString() == Id.ToString() && r.Major == major && r.Minor == minor && r.Patch == patch && r.Branch == branch)
                 .FirstOrDefault();
-            if (pkg.Filename.Contains(filename))
-            {
-                notValid.code = "FileNameAlreadyExist";
-                notValid.message = "A same file already exist with the same name and version.";
 
-                context.HttpContext.Response.StatusCode = 400;
-                context.Result = new JsonResult(notValid);
-                return;
-            }
             if (pkg == null)
             {
                 notValid.code = "NoSuchVersion";
@@ -77,19 +70,14 @@ namespace Upward.ActionFilters
                 return;
             }
 
-            if (HasTag)
+            if (pkg.Filename.Contains(filename))
             {
-                string tag = (string)context.ActionArguments["tag"];
+                notValid.code = "FileNameAlreadyExist";
+                notValid.message = "A same file already exist with the same name and version.";
 
-                if (pkg.Label != tag)
-                {
-                    notValid.code = "NoSuchTag";
-                    notValid.message = "This tag hasn't been created.";
-
-                    context.HttpContext.Response.StatusCode = 400;
-                    context.Result = new JsonResult(notValid);
-                    return;
-                }
+                context.HttpContext.Response.StatusCode = 400;
+                context.Result = new JsonResult(notValid);
+                return;
             }
 
             if (string.IsNullOrEmpty(contentType))

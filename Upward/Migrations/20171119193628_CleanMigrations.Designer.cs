@@ -11,7 +11,7 @@ using Upward.Models.Database;
 namespace Upward.Migrations
 {
     [DbContext(typeof(upwardContext))]
-    [Migration("20171111182541_CleanMigrations")]
+    [Migration("20171119193628_CleanMigrations")]
     partial class CleanMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -51,6 +51,11 @@ namespace Upward.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("id");
 
+                    b.Property<string>("Branch")
+                        .IsRequired()
+                        .HasColumnName("branch")
+                        .HasMaxLength(39);
+
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnName("created")
@@ -60,10 +65,6 @@ namespace Upward.Migrations
                         .IsRequired()
                         .HasColumnName("filename")
                         .HasColumnType("varchar(255)[]");
-
-                    b.Property<string>("Label")
-                        .HasColumnName("label")
-                        .HasMaxLength(39);
 
                     b.Property<int>("Major")
                         .HasColumnName("major");
@@ -127,9 +128,6 @@ namespace Upward.Migrations
                         .IsRequired()
                         .HasColumnName("email")
                         .HasMaxLength(320);
-
-                    b.Property<int>("GithubId")
-                        .HasColumnName("githubid");
 
                     b.Property<string>("Password")
                         .IsRequired()

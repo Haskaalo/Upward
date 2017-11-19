@@ -6,7 +6,7 @@ namespace Upward.Models
     {
         [JsonProperty("version")]
         public string Version { get; set; }
-        [JsonProperty("tag")]
-        public string Tag { get; set; }
+        [JsonProperty("branch")]
+        public string Branch { get; set; }
     }
 }

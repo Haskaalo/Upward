@@ -7,12 +7,6 @@ namespace Upward.Helpers
 {
     public class ValidVersion
     {
-        private readonly upwardContext db;
-
-        public ValidVersion(upwardContext context)
-        {
-            db = context;
-        }
 
         public static bool ValidSemver(string version)
         {
@@ -31,7 +25,7 @@ namespace Upward.Helpers
         }
 
         // ValidSemver must be used before NoRollback.
-        public async Task<bool> NoRollback(string version, int projectId)
+        public static async Task<bool> NoRollback(string version, string branch, int projectId, upwardContext db)
         {
             var ver = version.Split(".");
 
@@ -41,10 +35,11 @@ namespace Upward.Helpers
 
             var hasRollback = await db.Pkgfile
                 .AnyAsync(r => r.Project == projectId &&
-                    r.Major > major ||
+                    r.Branch == branch &&
+                    (r.Major > major ||
                     (r.Minor > minor && r.Major == major) ||
                     (r.Patch > patch && r.Major == major && r.Minor == minor) ||
-                    (r.Patch == patch && r.Major == major && r.Minor == minor));
+                    (r.Patch == patch && r.Major == major && r.Minor == minor)));
 
             if (hasRollback) return false;
 

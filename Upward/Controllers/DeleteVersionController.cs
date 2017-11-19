@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Upward.ActionFilters;
 using Google.Cloud.Storage.V1;
@@ -22,26 +19,14 @@ namespace Upward.Controllers
             storageClient = _storageClient;
         }
 
-        // DELETE: /:tag/:version
-        [HttpDelete("/{tag}/{version}"), ValidApiKey(MustCheck = true), DeleteVersionValidate(HasTag = true)]
-        public async Task<IActionResult> DeleteWithTag(string tag, string version)
+        // DELETE: /:branch/:version
+        [HttpDelete("/{branch}/{version}"), ValidApiKey(MustCheck = true), DeleteVersionValidate]
+        public async Task<IActionResult> DeleteWithBranch(string branch, string version)
         {
             await DeleteVersion.Delete(
                 projectId: int.Parse(Response.Headers["x-project-id"]),
                 version: version,
-                client: storageClient,
-                db: db);
-
-            return Ok();
-        }
-
-        // DELETE: /:version
-        [HttpDelete("/{version}"), ValidApiKey(MustCheck = true), DeleteVersionValidate(HasTag = false)]
-        public async Task<IActionResult> DeleteNoTag(string version)
-        {
-            await DeleteVersion.Delete(
-                projectId: int.Parse(Response.Headers["x-project-id"]),
-                version: version,
+                branch: branch,
                 client: storageClient,
                 db: db);
 

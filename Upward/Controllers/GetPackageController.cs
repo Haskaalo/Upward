@@ -23,27 +23,14 @@ namespace Upward.Controllers
             storageClient = _storageClient;
         }
 
-        // GET: /:tag/:version/:filename
-        [HttpGet("/{tag}/{version}/{filename}"), ValidApiKey(MustCheck = false), GetPackageValidate(HasTag = true)]
-        public async Task<IActionResult> GetWithTag(string tag, string version, string filename)
+        // GET: /:branch/:version/:filename
+        [HttpGet("/{branch}/{version}/{filename}"), ValidApiKey(MustCheck = false), GetPackageValidate]
+        public async Task<IActionResult> GetWithBranch(string branch, string version, string filename)
         {
             using (var stream = new MemoryStream())
             {
-                await storageClient.DownloadObjectAsync("upward-test", $"pkg/{Response.Headers["x-project-id"]}/{version}/{filename}", stream);
-                var metaData = await storageClient.GetObjectAsync("upward-test", $"pkg/{Response.Headers["x-project-id"]}/{version}/{filename}");
-
-                return File(stream.ToArray(), metaData.ContentType);
-            }
-        }
-
-        // GET: /:version/:filename
-        [HttpGet("/{version}/{filename}"), ValidApiKey(MustCheck = false), GetPackageValidate(HasTag = false)]
-        public async Task<IActionResult> GetNoTag(string version, string filename)
-        {
-            using (var stream = new MemoryStream())
-            {
-                await storageClient.DownloadObjectAsync("upward-test", $"pkg/{Response.Headers["x-project-id"]}/{version}/{filename}", stream);
-                var metaData = await storageClient.GetObjectAsync("upward-test", $"pkg/{Response.Headers["x-project-id"]}/{version}/{filename}");
+                await storageClient.DownloadObjectAsync("upward-test", $"pkg/{Response.Headers["x-project-id"]}/{branch}/{version}/{filename}", stream);
+                var metaData = await storageClient.GetObjectAsync("upward-test", $"pkg/{Response.Headers["x-project-id"]}/{branch}/{version}/{filename}");
 
                 return File(stream.ToArray(), metaData.ContentType);
             }

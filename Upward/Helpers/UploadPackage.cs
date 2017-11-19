@@ -16,6 +16,7 @@ namespace Upward.Helpers
             string filename,
             string contentType,
             long contentLength,
+            string branch,
             StorageClient client,
             upwardContext db)
         {
@@ -26,7 +27,7 @@ namespace Upward.Helpers
             int patch = int.Parse(ver[2]);
 
             var pkg = await db.Pkgfile
-                .Where(r => r.Project == projectId && r.Major == major && r.Minor == minor && r.Patch == patch)
+                .Where(r => r.Project == projectId && r.Major == major && r.Minor == minor && r.Patch == patch && r.Branch == branch)
                 .FirstOrDefaultAsync();
 
             var project = await db.Project
@@ -34,7 +35,7 @@ namespace Upward.Helpers
                 .FirstOrDefaultAsync();
 
             var user = await db.Userprofile
-                .Where(r => r.GithubId == project.Userid)
+                .Where(r => r.Id == project.Userid)
                 .FirstOrDefaultAsync();
 
             pkg.Filename = pkg.Filename.Concat(new string[] { filename }).ToArray();
@@ -43,7 +44,7 @@ namespace Upward.Helpers
 
             await client.UploadObjectAsync(
                 bucket: "upward-test",
-                objectName: $"pkg/{projectId}/{version}/{filename}",
+                objectName: $"pkg/{projectId}/{branch}/{version}/{filename}",
                 contentType: contentType,
                 source: memBody
                 );

@@ -12,6 +12,7 @@ namespace Upward.Helpers
             int projectId,
             string version,
             string filename,
+            string branch,
             StorageClient client,
             upwardContext db)
         {
@@ -22,7 +23,7 @@ namespace Upward.Helpers
             int patch = int.Parse(ver[2]);
 
             var pkg = await db.Pkgfile
-                .Where(r => r.Project == projectId && r.Major == major && r.Minor == minor && r.Patch == patch)
+                .Where(r => r.Project == projectId && r.Major == major && r.Minor == minor && r.Patch == patch && r.Branch == branch)
                 .FirstOrDefaultAsync();
 
             var project = await db.Project
@@ -30,17 +31,17 @@ namespace Upward.Helpers
                 .FirstOrDefaultAsync();
 
             var user = await db.Userprofile
-                .Where(r => r.GithubId == project.Userid)
+                .Where(r => r.Id == project.Userid)
                 .FirstOrDefaultAsync();
 
             var metaData = await client
-                .GetObjectAsync("upward-test", $"pkg/{projectId}/{version}/{filename}");
+                .GetObjectAsync("upward-test", $"pkg/{projectId}/{branch}/{version}/{filename}");
 
             pkg.Filename = pkg.Filename.Where(val => val != filename).ToArray();
             pkg.Size -= (long)metaData.Size;
             user.Size -= (long)metaData.Size;
 
-            await client.DeleteObjectAsync("upward-test", $"pkg/{projectId}/{version}/{filename}");
+            await client.DeleteObjectAsync("upward-test", $"pkg/{projectId}/{branch}/{version}/{filename}");
             await db.SaveChangesAsync();
         }
     }

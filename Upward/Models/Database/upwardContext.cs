@@ -61,9 +61,10 @@ namespace Upward.Models.Database
                     .HasColumnName("filename")
                     .HasColumnType("varchar(255)[]");
 
-                entity.Property(e => e.Label)
+                entity.Property(e => e.Branch)
+                    .IsRequired()
                     .HasMaxLength(39)
-                    .HasColumnName("label");
+                    .HasColumnName("branch");
 
                 entity.Property(e => e.Size)
                     .HasColumnName("size");
@@ -112,9 +113,6 @@ namespace Upward.Models.Database
                 entity.ToTable("userprofile");
 
                 entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.GithubId)
-                    .HasColumnName("githubid");
 
                 entity.Property(e => e.Size)
                     .HasColumnName("size")

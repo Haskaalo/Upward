@@ -32,10 +32,10 @@ namespace Upward.ActionFilters
                 return;
             }
 
-            if (create.Tag != null && string.IsNullOrWhiteSpace(create.Tag))
+            if (string.IsNullOrWhiteSpace(create.Branch))
             {
-                notValid.code = "EmptyTag";
-                notValid.message = "The tag is empty or consist of whitespace(s)";
+                notValid.code = "EmptyBranch";
+                notValid.message = "The branch name is empty or consist of whitespace(s)";
                 context.HttpContext.Response.StatusCode = 400;
                 context.Result = new JsonResult(notValid);
                 return;

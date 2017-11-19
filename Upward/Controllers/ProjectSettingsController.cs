@@ -26,7 +26,7 @@ namespace Upward.Controllers
             var projectName = HttpContext.Request.Host.ToString().Split(".")[0];
             var project = db.Project.Where(r => r.Name == projectName).FirstOrDefault();
 
-            var hasNoRollback = await new ValidVersion(db).NoRollback(create.Version, project.Id);
+            var hasNoRollback = await ValidVersion.NoRollback(create.Version, create.Branch, project.Id, db);
             var apiError = new ApiErrorModel();
             if (!hasNoRollback)
             {
@@ -46,7 +46,7 @@ namespace Upward.Controllers
                 Major = int.Parse(ver[0]),
                 Minor = int.Parse(ver[1]),
                 Patch = int.Parse(ver[2]),
-                Label = create.Tag,
+                Branch = create.Branch,
                 Filename = new string[] { },
                 Created = currentDate
             };
@@ -56,10 +56,9 @@ namespace Upward.Controllers
 
             var SuccessResponse = new CreateSuccessModel
             {
-                Url = $"{HttpContext.Request.Host.ToString()}/{create.Version}/",
-                UrlWithTag = create.Tag == null ? null : $"{HttpContext.Request.Host.ToString()}/{create.Tag}/{create.Version}",
+                Url = $"{HttpContext.Request.Host.ToString()}/{create.Branch}/{create.Version}/",
                 Created = currentDate.ToString(),
-                Tag = create.Tag,
+                Branch = create.Branch,
                 Version = create.Version
             };
 

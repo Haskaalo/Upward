@@ -11,6 +11,7 @@ namespace Upward.Helpers
         public static async Task Delete(
             int projectId,
             string version,
+            string branch,
             StorageClient client,
             upwardContext db)
         {
@@ -21,7 +22,7 @@ namespace Upward.Helpers
             int patch = int.Parse(ver[2]);
 
             var pkg = await db.Pkgfile
-                .Where(r => r.Project == projectId && r.Major == major && r.Minor == minor && r.Patch == patch)
+                .Where(r => r.Project == projectId && r.Major == major && r.Minor == minor && r.Patch == patch && r.Branch == branch)
                 .FirstOrDefaultAsync();
 
             var project = await db.Project
@@ -29,7 +30,7 @@ namespace Upward.Helpers
                 .FirstOrDefaultAsync();
 
             var user = await db.Userprofile
-                .Where(r => r.GithubId == project.Userid)
+                .Where(r => r.Id == project.Userid)
                 .FirstOrDefaultAsync();
 
             user.Size -= pkg.Size;
@@ -41,7 +42,7 @@ namespace Upward.Helpers
                 return;
             } else
             {
-                foreach (string name in pkg.Filename) await client.DeleteObjectAsync("upward-test", $"pkg/{projectId}/{version}/{name}");
+                foreach (string name in pkg.Filename) await client.DeleteObjectAsync("upward-test", $"pkg/{projectId}/{branch}/{version}/{name}");
 
                 await db.SaveChangesAsync();
             }

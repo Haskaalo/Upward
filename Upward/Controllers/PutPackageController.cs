@@ -20,9 +20,9 @@ namespace Upward.Controllers
             db = _db;
         }
 
-        // PUT: /:tag/:version/:filename
-        [HttpPut("/{tag}/{version}/{filename}"), ValidApiKey(MustCheck = true), PutPackageValidate(HasTag = true)]
-        public async Task<IActionResult> Index(string tag, string version, string filename)
+        // PUT: /:Branch/:version/:filename
+        [HttpPut("/{branch}/{version}/{filename}"), ValidApiKey(MustCheck = true), PutPackageValidate]
+        public async Task<IActionResult> Index(string branch, string version, string filename)
         {
             MemoryStream memstream = new MemoryStream();
             Request.Body.CopyTo(memstream);
@@ -34,44 +34,16 @@ namespace Upward.Controllers
                 filename: filename,
                 contentType: Request.Headers["content-type"],
                 contentLength: (long)Request.ContentLength,
+                branch: branch,
                 client: _storageClient,
                 db: db
                 );
 
             var SuccessResponse = new CreateSuccessModel
             {
-                Url = $"{HttpContext.Request.Host.ToString()}/{version}/{filename}",
-                UrlWithTag = tag == null ? null : $"{HttpContext.Request.Host.ToString()}/{tag}/{version}/{filename}",
+                Url = $"{HttpContext.Request.Host.ToString()}/{branch}/{version}/{filename}",
                 Created = DateTime.Now.ToString(),
-                Tag = tag,
-                Version = version
-            };
-
-            return Json(SuccessResponse);
-        }
-
-        // PUT: /:version/:filename
-        [HttpPut("/{version}/{filename}"), ValidApiKey(MustCheck = true), PutPackageValidate(HasTag = false)]
-        public async Task<IActionResult> OnlyVersion(string version, string filename)
-        {
-            MemoryStream memstream = new MemoryStream();
-            Request.Body.CopyTo(memstream);
-
-            await UploadPackage.UploadFile(
-                projectId: int.Parse(Response.Headers["x-project-id"]),
-                memBody: memstream,
-                version: version,
-                filename: filename,
-                contentType: Request.Headers["content-type"],
-                contentLength: (long)Request.ContentLength,
-                client: _storageClient,
-                db: db
-                );
-
-            var SuccessResponse = new CreateSuccessModel
-            {
-                Url = $"{HttpContext.Request.Host.ToString()}/{version}/{filename}",
-                Created = DateTime.Now.ToString(),
+                Branch = branch,
                 Version = version
             };
 

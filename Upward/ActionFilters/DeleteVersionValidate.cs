@@ -9,11 +9,11 @@ namespace Upward.ActionFilters
 {
     public class DeleteVersionValidate : ActionFilterAttribute
     {
-        public bool HasTag { get; set; }
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             string version = (string)context.ActionArguments["version"];
+            string branch = (string)context.ActionArguments["branch"];
 
             var notValid = new ApiErrorModel();
 
@@ -44,26 +44,8 @@ namespace Upward.ActionFilters
             int minor = int.Parse(ver[1]);
             int patch = int.Parse(ver[2]);
 
-            if (HasTag == true)
-            {
-                string tag = (string)context.ActionArguments["tag"];
-
-                var doesExistsWithTag = db.Pkgfile
-                    .Any(r => r.Project.ToString() == Id.ToString() && r.Major == major && r.Minor == minor && r.Patch == patch && r.Label == tag);
-
-                if (!doesExistsWithTag)
-                {
-                    notValid.code = "NoSuchVersion";
-                    notValid.message = "No such version exists";
-                    context.HttpContext.Response.StatusCode = 400;
-                    context.Result = new JsonResult(notValid);
-                    return;
-                }
-
-            }
-
             var doesExists = db.Pkgfile
-                .Any(r => r.Project.ToString() == Id.ToString() && r.Major == major && r.Minor == minor && r.Patch == patch);
+                .Any(r => r.Project.ToString() == Id.ToString() && r.Major == major && r.Minor == minor && r.Patch == patch && r.Branch == branch);
 
             if (!doesExists)
             {

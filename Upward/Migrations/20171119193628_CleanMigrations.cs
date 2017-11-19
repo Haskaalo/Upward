@@ -29,9 +29,9 @@ namespace Upward.Migrations
                 {
                     id = table.Column<int>(type: "int4", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    branch = table.Column<string>(type: "varchar(39)", maxLength: 39, nullable: false),
                     created = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "now()"),
                     filename = table.Column<string[]>(type: "varchar(255)[]", nullable: false),
-                    label = table.Column<string>(type: "varchar(39)", maxLength: 39, nullable: true),
                     major = table.Column<int>(type: "int4", nullable: false),
                     minor = table.Column<int>(type: "int4", nullable: false),
                     patch = table.Column<int>(type: "int4", nullable: false),
@@ -67,7 +67,6 @@ namespace Upward.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
                     created = table.Column<DateTime>(type: "timestamp", nullable: false, defaultValueSql: "now()"),
                     email = table.Column<string>(type: "varchar(320)", maxLength: 320, nullable: false),
-                    githubid = table.Column<int>(type: "int4", nullable: false),
                     password = table.Column<string>(type: "varchar(60)", maxLength: 60, nullable: false),
                     size = table.Column<long>(type: "int8", nullable: false, defaultValueSql: "0")
                 },

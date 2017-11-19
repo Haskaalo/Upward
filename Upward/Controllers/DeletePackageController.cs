@@ -19,29 +19,15 @@ namespace Upward.Controllers
             storageClient = _storageClient;
         }
 
-        // DELETE: /:tag/:version/:filename
-        [HttpDelete("/{tag}/{version}/{filename}"), ValidApiKey(MustCheck = true), GetPackageValidate(HasTag = true)]
-        public async Task<IActionResult> DeleteWithTag(string tag, string version, string filename)
+        // DELETE: /:branch/:version/:filename
+        [HttpDelete("/{branch}/{version}/{filename}"), ValidApiKey(MustCheck = true), GetPackageValidate]
+        public async Task<IActionResult> DeleteWithBranch(string branch, string version, string filename)
         {
             await DeletePackage.DeleteFile(
                 projectId: int.Parse(Response.Headers["x-project-id"]),
                 version: version,
                 filename: filename,
-                client: storageClient,
-                db: db
-                );
-
-            return Ok();
-        }
-
-        // DELETE: /:version/:filename
-        [HttpDelete("/{version}/{filename}"), ValidApiKey(MustCheck = true), GetPackageValidate(HasTag = false)]
-        public async Task<IActionResult> DeleteWithoutTag(string version, string filename)
-        {
-            await DeletePackage.DeleteFile(
-                projectId: int.Parse(Response.Headers["x-project-id"]),
-                version: version,
-                filename: filename,
+                branch: branch,
                 client: storageClient,
                 db: db
                 );
