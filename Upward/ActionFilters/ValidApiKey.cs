@@ -13,13 +13,14 @@ namespace Upward.ActionFilters
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            var db = (upwardContext)context.HttpContext.RequestServices.GetService(typeof(upwardContext));
+            var accountsDb = (accountsContext)context.HttpContext.RequestServices.GetService(typeof(accountsContext));
+            var upwardDb = (upwardContext)context.HttpContext.RequestServices.GetService(typeof(upwardContext));
 
             string key = context.HttpContext.Request.Headers["Authorization"];
             var projectName = context.HttpContext.Request.Host.ToString().Split(".")[0];
             var notAuthorized = new ApiErrorModel();
 
-            var project = db.Project.Where(r => r.Name == projectName).FirstOrDefault();
+            var project = accountsDb.Project.Where(r => r.Name == projectName).FirstOrDefault();
 
             if (project == null)
             {
@@ -34,7 +35,7 @@ namespace Upward.ActionFilters
 
             if (MustCheck == false)
             {
-                var projectExist = db.Project
+                var projectExist = accountsDb.Project
                     .Any(x => x.Private == false && x.Name == projectName);
 
                 if (projectExist) return;
@@ -71,7 +72,7 @@ namespace Upward.ActionFilters
                 return;
             }
 
-            var doesKeyExist = db.Pkgapikey.Any(x => x.Project == project.Id && x.Key == actualKey);
+            var doesKeyExist = upwardDb.Pkgapikey.Any(x => x.Project == project.Id && x.Key == actualKey);
 
             if (!doesKeyExist)
             {

@@ -11,11 +11,12 @@ namespace Upward.Controllers
     {
         private readonly StorageClient storageClient;
 
-        private readonly upwardContext db;
+        private readonly accountsContext accountsDb;
+        private readonly upwardContext upwardDb;
 
-        public DeletePackageController(upwardContext Db, StorageClient _storageClient)
+        public DeletePackageController(upwardContext _upwardDb, accountsContext _accountsDb, StorageClient _storageClient)
         {
-            db = Db;
+            upwardDb = _upwardDb;
             storageClient = _storageClient;
         }
 
@@ -29,7 +30,8 @@ namespace Upward.Controllers
                 filename: filename,
                 branch: branch,
                 client: storageClient,
-                db: db
+                upwardDb: upwardDb,
+                accountsDb: accountsDb
                 );
 
             return Ok();

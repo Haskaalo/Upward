@@ -12,11 +12,13 @@ namespace Upward.Controllers
 {
     public class ProjectSettingsController : Controller
     {
-        private readonly upwardContext db;
+        private readonly upwardContext upwardDb;
+        private readonly accountsContext accountsDb;
 
-        public ProjectSettingsController(upwardContext context)
+        public ProjectSettingsController(upwardContext _upwardDb, accountsContext _accountsDb)
         {
-            db = context;
+            upwardDb = _upwardDb;
+            accountsDb = _accountsDb;
         }
 
         // GET: /create
@@ -24,9 +26,9 @@ namespace Upward.Controllers
         public async Task<IActionResult> Create([FromBody] CreateModel create)
         {
             var projectName = HttpContext.Request.Host.ToString().Split(".")[0];
-            var project = db.Project.Where(r => r.Name == projectName).FirstOrDefault();
+            var project = accountsDb.Project.Where(r => r.Name == projectName).FirstOrDefault();
 
-            var hasNoRollback = await ValidVersion.NoRollback(create.Version, create.Branch, project.Id, db);
+            var hasNoRollback = await ValidVersion.NoRollback(create.Version, create.Branch, project.Id, upwardDb);
             var apiError = new ApiErrorModel();
             if (!hasNoRollback)
             {
@@ -51,8 +53,8 @@ namespace Upward.Controllers
                 Created = currentDate
             };
 
-            await db.Pkgfile.AddAsync(newPackage);
-            await db.SaveChangesAsync();
+            await upwardDb.Pkgfile.AddAsync(newPackage);
+            await upwardDb.SaveChangesAsync();
 
             var SuccessResponse = new CreateSuccessModel
             {

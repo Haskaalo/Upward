@@ -36,7 +36,7 @@ namespace Upward.ActionFilters
                 return;
             }
 
-            var db = (upwardContext)context.HttpContext.RequestServices.GetService(typeof(upwardContext));
+            var upwardDb = (upwardContext)context.HttpContext.RequestServices.GetService(typeof(upwardContext));
             var Id = context.HttpContext.Response.Headers["X-Project-Id"];
 
             var ver = version.Split(".");
@@ -46,7 +46,7 @@ namespace Upward.ActionFilters
             int patch = int.Parse(ver[2]);
 
 
-            var doesExists = db.Pkgfile
+            var doesExists = upwardDb.Pkgfile
                 .Any(r => r.Project.ToString() == Id.ToString() && r.Major == major && r.Minor == minor && r.Patch == patch && r.Branch == branch && r.Filename.Contains(filename));
 
             if (!doesExists)

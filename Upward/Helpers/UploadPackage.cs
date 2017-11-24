@@ -18,7 +18,8 @@ namespace Upward.Helpers
             long contentLength,
             string branch,
             StorageClient client,
-            upwardContext db)
+            upwardContext upwardDb,
+            accountsContext accountsDb)
         {
             var ver = version.Split(".");
 
@@ -26,15 +27,15 @@ namespace Upward.Helpers
             int minor = int.Parse(ver[1]);
             int patch = int.Parse(ver[2]);
 
-            var pkg = await db.Pkgfile
+            var pkg = await upwardDb.Pkgfile
                 .Where(r => r.Project == projectId && r.Major == major && r.Minor == minor && r.Patch == patch && r.Branch == branch)
                 .FirstOrDefaultAsync();
 
-            var project = await db.Project
+            var project = await accountsDb.Project
                 .Where(r => r.Id == projectId)
                 .FirstOrDefaultAsync();
 
-            var user = await db.Userprofile
+            var user = await accountsDb.Userprofile
                 .Where(r => r.Id == project.Userid)
                 .FirstOrDefaultAsync();
 
@@ -49,7 +50,8 @@ namespace Upward.Helpers
                 source: memBody
                 );
 
-            await db.SaveChangesAsync();
+            await upwardDb.SaveChangesAsync();
+            await accountsDb.SaveChangesAsync();
         }
     }
 }

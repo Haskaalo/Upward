@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Upward.Models.Database;
-using Upward.Models;
 using Upward.ActionFilters;
 using Google.Cloud.Storage.V1;
 using System.IO;
@@ -15,11 +11,11 @@ namespace Upward.Controllers
     {
         private readonly StorageClient storageClient;
 
-        private readonly upwardContext db;
+        private readonly upwardContext upwardDb;
 
-        public GetPackageController(upwardContext Db, StorageClient _storageClient)
+        public GetPackageController(upwardContext _upwardDb, StorageClient _storageClient)
         {
-            db = Db;
+            upwardDb = _upwardDb;
             storageClient = _storageClient;
         }
 

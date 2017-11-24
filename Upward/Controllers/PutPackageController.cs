@@ -13,11 +13,14 @@ namespace Upward.Controllers
     public class PutPackageController : Controller
     {
         private readonly StorageClient _storageClient;
-        private readonly upwardContext db;
-        public PutPackageController(StorageClient storageClient, upwardContext _db)
+        private readonly upwardContext upwardDb;
+        private readonly accountsContext accountsDb;
+
+        public PutPackageController(StorageClient storageClient, accountsContext _accountsDb,upwardContext _upwardDb)
         {
             _storageClient = storageClient;
-            db = _db;
+            upwardDb = _upwardDb;
+            accountsDb = _accountsDb;
         }
 
         // PUT: /:Branch/:version/:filename
@@ -36,7 +39,8 @@ namespace Upward.Controllers
                 contentLength: (long)Request.ContentLength,
                 branch: branch,
                 client: _storageClient,
-                db: db
+                upwardDb: upwardDb,
+                accountsDb: accountsDb
                 );
 
             var SuccessResponse = new CreateSuccessModel

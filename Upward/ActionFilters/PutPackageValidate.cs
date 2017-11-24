@@ -46,7 +46,7 @@ namespace Upward.ActionFilters
                 return;
             }
 
-            var db = (upwardContext)context.HttpContext.RequestServices.GetService(typeof(upwardContext));
+            var upwardDb = (upwardContext)context.HttpContext.RequestServices.GetService(typeof(upwardContext));
             var Id = context.HttpContext.Response.Headers["X-Project-Id"];
             string contentType = context.HttpContext.Request.Headers["content-type"];
 
@@ -56,7 +56,7 @@ namespace Upward.ActionFilters
             int minor = int.Parse(ver[1]);
             int patch = int.Parse(ver[2]);
 
-            var pkg = db.Pkgfile
+            var pkg = upwardDb.Pkgfile
                 .Where(r => r.Project.ToString() == Id.ToString() && r.Major == major && r.Minor == minor && r.Patch == patch && r.Branch == branch)
                 .FirstOrDefault();
 

@@ -22,7 +22,7 @@ namespace Upward.ActionFilters
                 context.Result = new JsonResult(notValid);
                 return;
             }
-
+            
             if (!ValidVersion.ValidSemver(create.Version))
             {
                 notValid.code = "NotValidVersion";
