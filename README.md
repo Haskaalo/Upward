@@ -1,6 +1,6 @@
 # Upward
 
-Upward is a versioned release service still in development.
+Upward is a "abandoned" versioned release service project
 
 ## API Paths
 
