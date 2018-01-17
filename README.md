@@ -1,6 +1,6 @@
 # Upward
 
-Upward is a "abandoned" versioned release service project
+Upward is a "abandoned" versioned release service project that I wrote when I first learned C#
 
 ## API Paths
 
